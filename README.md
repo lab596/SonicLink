@@ -23,4 +23,11 @@ Now that users can add tags and likes to a song how can they interact with other
 
 Tag Leaderboards enable users to view their top upvoted tags as well as tags that others placed that are big hits!
 
+---
+
+# Contributers
+
+Rohan Udupa : rudupa@calpoly.edu
+
+
 
