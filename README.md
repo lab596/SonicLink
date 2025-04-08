@@ -29,6 +29,7 @@ Tag Leaderboards enable users to view their top upvoted tags as well as tags tha
 
 Rohan Udupa : rudupa@calpoly.edu
 <br/> Anna Grillo: argrillo@calpoly.edu
+<br/>Kip Stackle: Kstackle@calpoly.edu
 
 
 
