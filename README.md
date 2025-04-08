@@ -6,7 +6,7 @@ Welcome to SonicLink! A backend API built for the purpose of musical social inte
 
 ## 📌 Overview
 
-The goal of SonicLink is to use existing muisc based datasets such as [Spotify Music Dataset](https://www.kaggle.com/datasets/solomonameh/spotify-music-dataset) to generate a community of individuals who are able to add unique `tags` and  `likes` to songs they enjoy building a new level of musical interaction.
+The goal of SonicLink is to use existing music based datasets such as [Spotify Music Dataset](https://www.kaggle.com/datasets/solomonameh/spotify-music-dataset) to generate a community of individuals who are able to add unique `tags` and  `likes` to songs they enjoy building a new level of musical interaction.
 
 ### 🏷️ What are tags?
  Tags are meant to be community generated quips that users can attach to a specific song. They are meant to classify songs in a fun a playful manner to express interest or connections. 
@@ -29,7 +29,8 @@ Tag Leaderboards enable users to view their top upvoted tags as well as tags tha
 
 Rohan Udupa : rudupa@calpoly.edu
 <br/> Anna Grillo: argrillo@calpoly.edu
-<br/>Kip Stackle: Kstackle@calpoly.edu
+<br/> Kip Stackle: Kstackle@calpoly.edu
+<br/> Felipe Rotelli: frotelli@calpoly.edu
 
 
 
