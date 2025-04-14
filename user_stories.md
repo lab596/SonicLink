@@ -28,3 +28,16 @@ No user recommendations have been made.
 
 Recommendations don't seem like the users have similar tastes.
   - The data that was used to make that recommendation will be stated (ie. You were recommended this user because of your interest in the #Summer2025 tag)
+
+A lyrical moment is submitted with an invalid timestamp.
+  - A message will be shown with the error explaining to please choose a timestamp that matches the lyrics as well as select a moment within the songs duration. 
+
+A searched song is not present in our Dataset.
+  - A message will be shown saying we couldnt find that song, suggest search tips (ie. please check the tittle and spelling). 
+
+A user tries to enter a challenge submission after window closes.
+  - A message will be shown with that explains the challenge window has closed and show when the window closed. 
+
+A user tries to view their leaderboard without adding any tags.
+  - A message will be shown saying they havent tagged any songs so there are no tags to display in the leaderboard.  
+
