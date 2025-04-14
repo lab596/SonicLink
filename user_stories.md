@@ -33,7 +33,7 @@ A lyrical moment is submitted with an invalid timestamp.
   - A message will be shown with the error explaining to please choose a timestamp that matches the lyrics as well as select a moment within the song's duration. 
 
 A searched song is not present in our Dataset.
-  - A message will be shown saying we couldnt find that song, suggest search tips (ie. please check the tittle and spelling). 
+  - A message will be shown saying we couldn't find that song, suggest search tips (ie. please check the title and spelling). 
 
 A user tries to enter a challenge submission after the window closes.
   - A message will be shown with that explains the challenge window has closed and show when the window closed. 
@@ -46,6 +46,14 @@ A user tries to follow another user, but the action fails (network error or user
 
 A user will attempt to upvote their own tag.
   - A message will be shown explaining that upvoting one's own tag is not allowed to keep rankings fair
+
+A user tries to visit another user's profile that has been deleted or suspended.
+  - A "User Not Found" message will be shown and make suggestions for other users to follow
+
+A user tries to access the leaderboard, but it fails to load due to server issues.
+  - A message will be shown stating: "Leaderboard is currently unavailable. Please try again later"
+
+
 
 
 
