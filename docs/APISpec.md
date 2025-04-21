@@ -221,8 +221,8 @@ SonicLink is a backend API designed to enhance musical social interaction throug
   ...
 ]
 ```
-### 10. `GET /reccomended`
-**Get reccomended users who have contributed to similar things as you.**
+### 10. `GET /recommended`
+**Get recommended users who have contributed to similar things as you.**
 
 **Responses:**
 | Code | Description |
