@@ -235,12 +235,11 @@ SonicLink is a backend API designed to enhance musical social interaction throug
 ```json
 [
   {
-    "user_id": "johndoe",
-    "reccomened_id": "janedoe"
+    "user_id": "123",
+    "reccomened_users": {user_id,...,}
   }
   ...
 ]
-```
 
 
 
