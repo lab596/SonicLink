@@ -1,11 +1,12 @@
 from fastapi import FastAPI
-from src.api import carts, catalog, bottler, barrels, admin, info, inventory
+from src.api import account, carts, catalog, bottler, barrels, info, inventory
 from starlette.middleware.cors import CORSMiddleware
 
 description = """
 Central Coast Cauldrons is the premier ecommerce site for all your alchemical desires.
 """
 tags_metadata = [
+    {"name": "account", "description": "Create and get account information."},
     {"name": "tags", "description": "Create a tag for a user."},
     {"name": "users", "description": "User management interactions."},
     {"name": "lyrical-moments", "description": "Create a lyrical moment for a song."},
@@ -42,10 +43,10 @@ app.include_router(carts.router)
 app.include_router(catalog.router)
 app.include_router(bottler.router)
 app.include_router(barrels.router)
-app.include_router(admin.router)
+app.include_router(account.router)
 app.include_router(info.router)
 
 
 @app.get("/")
 async def root():
-    return {"message": "Shop is open for business!"}
+    return {"message": "Are you ready to have a Sonic good time!"}
