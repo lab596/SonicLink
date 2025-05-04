@@ -57,16 +57,7 @@ def create_tag(req: TagCreateRequest):
     
     return {"tag_id": result[0], "message": "Tag created successfully"}
 
-
-    op.create_table(
-        "user_tag_upvotes",
-        sa.Column("id", sa.Integer, primary_key=True, autoincrement=True),
-        sa.Column("tag_id", sa.Integer, sa.ForeignKey("user_tags.id")),
-        sa.Column("user_id", sa.Integer, sa.ForeignKey("account_users.id")),
-        sa.Column("timestamp", sa.TIMESTAMP(timezone=True), server_default=sa.func.now()),
-    )
-
-@router.post("/{tag_id}/upvote", response_model=UpvoteResponse, status_code=status.HTTP_202_ACCEPTED)
+@router.post("/upvote", response_model=UpvoteResponse, status_code=status.HTTP_202_ACCEPTED)
 def create_tag(req: UpvoteRequest):
     """
     Upvote an existing tag with the creator's user id.
