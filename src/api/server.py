@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from src.api import account, carts, catalog, bottler, barrels, info, inventory
+from src.api import account, carts, catalog, bottler, barrels, info, inventory, tags
 from starlette.middleware.cors import CORSMiddleware
 
 description = """
@@ -44,7 +44,8 @@ app.include_router(catalog.router)
 app.include_router(bottler.router)
 app.include_router(barrels.router)
 app.include_router(account.router)
-app.include_router(info.router)
+app.include_router(tags.router)
+app.include_router(info.router) 
 
 
 @app.get("/")
