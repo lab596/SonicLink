@@ -47,7 +47,7 @@ SonicLink is a backend API designed to enhance musical social interaction throug
 | 204 | Successful Response |
 | 422 | Validation Error |
 
-### 2. `POST /tags/:tag_id/like`
+### 2. `POST /tags/upvote`
 **Upvote an existing tag.**
 
 **Request Body:**
