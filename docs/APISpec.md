@@ -54,6 +54,7 @@ SonicLink is a backend API designed to enhance musical social interaction throug
 ```json
 {
   "user_id": 123,
+  "tag_id": 456,
 }
 ```
 
