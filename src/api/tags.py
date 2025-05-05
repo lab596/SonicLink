@@ -87,3 +87,54 @@ def create_tag(req: UpvoteRequest):
     
     return  UpvoteResponse(message= "Successfully upvoted!")
         
+@router.get("/users/{user_id}/tags", response_model=List[TagResponse])
+def get_song_tags(user_id: int):
+    """
+    Retrieve all tags created by a specific user along with upvote counts
+    """
+
+    with db.engine.begin() as connection:
+
+        # check if user exists
+        user_exists = connection.execute(
+            sqlalchemy.text(
+                """
+                SELECT 1
+                FROM account_users
+                WHERE id = :uid
+                """
+            ),
+            {"uid": user_id}
+        ).one()
+
+        if not user_exists:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        # query all tags of the user
+        rows = connection.execute(
+            sqlalchemy.text(
+                """ 
+                SELECT
+                    ut.id AS tag_id,
+                    ut.track_id AS song_id,
+                    ut.tag_text,
+                    COUNT(utu.user_id) AS upvotes
+                FROM user_tags ut
+                LEFT JOIN user_tag_upvotes utu ON ut.id = utu.tag_id
+                WHERE ut.user_id = :user_id
+                GROUP BY ut.id, ut.track_id, ut.tag_text
+                ORDER BY ut.timestamp DESC
+                """
+            ),
+            {"user_id": user_id}
+        ).fetchall()
+
+    return [
+        TagResponse(
+            tag_id=row.tag_id,
+            song_id=row.song_id,
+            tag_text=row.tag_text,
+            upvotes=row.upvotes
+        )
+        for row in rows
+    ]
