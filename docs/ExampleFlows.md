@@ -13,7 +13,7 @@ Rohan discovers a new Japenese bop track that reminds him of Tokyo Drift. He dec
    - song_id: "spotify:track:abc123"
    - tag_text: "drifting into the lead"
 
-3. His friend Lebron sees the tag and resonates with it. He calls `POST /tags/456/upvote` with his user_id.
+3. His friend Lebron sees the tag and resonates with it. He calls `POST /tags/upvote` with his user_id.
 
 4. Rohan checks how well his tags are doing by calling `GET /users/1/tags`.
 
@@ -30,7 +30,7 @@ Jeffery Bezos wants to kick off a friendly tagging contest around sad songs that
 2. His friend Elon participates by calling `POST /challenges/789/submissions` with:
    - tag_text: "cry then conquer"
 
-3. Other users vote on Elon's tag via `POST /tags/987/upvote`.
+3. Other users vote on Elon's tag via `POST /tags/upvote`.
 
 4. At the end of the week, Jeffery calls `GET /challenges/weekly` and `GET /leaderboard/tags` to see what’s trending and how his challenge did.
 
@@ -49,7 +49,7 @@ Tony Stark has been listening to a lot of music, but he's feeling a little lonel
    - song_id: "spotify:track:abc456"
    - tag_text: "Smart, Rich, Playa, Humanitarian"
 
-3. Pepper Potts also calls `POST /tags/123/upvote` on the tag that Tony made because she enjoys the song.
+3. Pepper Potts also calls `POST /tags/upvote` on the tag that Tony made because she enjoys the song.
 
 4. Tony then calls `GET /recommended` and is returned Pepper Potts' user_id, because she upvoted his tag and made her own tag with similar wording.
 
