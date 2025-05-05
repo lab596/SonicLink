@@ -39,7 +39,7 @@ def create_new(user : User):
 
 
 @router.post("/login", response_model=Creationresponse, status_code=status.HTTP_201_CREATED)
-def create_new(user : User):
+def login_user(user : User):
     """
     Login to an existing account using username and password to fetch the id of the account.
     """
