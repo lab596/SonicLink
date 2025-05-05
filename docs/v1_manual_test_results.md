@@ -1,6 +1,6 @@
 ## Flow 1: Tag Creation and Upvote Interaction 🔥
 
-Rohan discovers a new Japenese bop track that reminds him of Tokyo Drift. He decides to tag the song.
+Rohan discovers a new Japenese bop track that reminds him of *Tokyo Drift*. He decides to tag the song.
 
 1. Rohan calls `GET /account` since he doesnt have an account yet. This generates his user id.
 
@@ -15,7 +15,10 @@ Rohan discovers a new Japenese bop track that reminds him of Tokyo Drift. He dec
 
 ---
 ## Testing Results 🔥
-1. curl -X 'POST' \
+### 1. Create Account
+
+```bash
+curl -X 'POST' \
   'http://127.0.0.1:3000/account/new' \
   -H 'accept: application/json' \
   -H 'access_token: ILIKETOSING' \
@@ -23,12 +26,23 @@ Rohan discovers a new Japenese bop track that reminds him of Tokyo Drift. He dec
   -d '{
   "username": "Rohan",
   "password": "mypassword"
-  }'
-  - Response Body:
-    {
-    "id": 1
-    }
-2. curl -X 'POST' \
+}'
+```
+
+**Response Body:**
+
+```
+{
+  "id": 1
+}
+```
+
+---
+
+### 2. Create Tag
+
+```bash
+curl -X 'POST' \
   'http://127.0.0.1:3000/tags' \
   -H 'accept: application/json' \
   -H 'access_token: ILIKETOSING' \
@@ -37,13 +51,23 @@ Rohan discovers a new Japenese bop track that reminds him of Tokyo Drift. He dec
   "user_id": 1,
   "song_id": "7yesZrAOvMYmVVkEzSF13g",
   "tag_text": "drifting into the lead"
-  }'
-  - Response Body:
-    {
-    "tag_id": 2,
-    "message": "Tag created successfully"
-    }
-3. curl -X 'POST' \
+}'
+```
+
+**Response Body:**
+
+```
+{
+  "tag_id": 2,
+  "message": "Tag created successfully"
+}
+```
+
+---
+### 3. Upvote Tag
+
+```bash
+curl -X 'POST' \
   'http://127.0.0.1:3000/tags/upvote' \
   -H 'accept: application/json' \
   -H 'access_token: ILIKETOSING' \
@@ -51,11 +75,44 @@ Rohan discovers a new Japenese bop track that reminds him of Tokyo Drift. He dec
   -d '{
   "user_id": 3,
   "tag_id": 2
+}'
+```
 
-  }'
-  - Response Body:
-    {
-    "message": "Successfully upvoted!"
-    }
-- finish when kip adds `GET /users/1/tags
-  ---
+**Response Body:**
+
+```
+{
+  "message": "Successfully upvoted!"
+}
+```
+
+---
+
+### 4. Get User Tags
+
+```bash
+curl -X 'GET' \
+  'http://127.0.0.1:3000/tags/users/1/tags' \
+  -H 'accept: application/json' \
+  -H 'access_token: ILIKETOSING'
+```
+
+**Response Body:**
+
+```
+[
+  {
+    "tag_id": 2,
+    "song_id": "7yesZrAOvMYmVVkEzSF13g",
+    "tag_text": "drifting into the lead",
+    "upvotes": 1
+  },
+  {
+    "tag_id": 1,
+    "song_id": "00IiTu5o9IVasXMX3udpZo",
+    "tag_text": "enjoyed",
+    "upvotes": 1
+  }
+]
+```
+---
