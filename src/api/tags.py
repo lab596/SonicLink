@@ -58,7 +58,7 @@ def create_tag(req: TagCreateRequest):
     return {"tag_id": result[0], "message": "Tag created successfully"}
 
 @router.post("/upvote", response_model=UpvoteResponse, status_code=status.HTTP_202_ACCEPTED)
-def create_tag(req: UpvoteRequest):
+def create_upvote(req: UpvoteRequest):
     """
     Upvote an existing tag with the creator's user id.
     """
