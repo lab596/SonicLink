@@ -66,7 +66,7 @@ def upgrade() -> None:
                     "duration": int(row.get("duration_ms", 0)) // 1000,
                 }
             )
-            if len(batch) == 10_000:
+            if len(batch) == 5000:
                 op.bulk_insert(spotify_songs, batch)
                 batch.clear()
     if batch:
