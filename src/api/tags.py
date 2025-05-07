@@ -142,3 +142,49 @@ def get_song_tags(user_id: int):
         )
         for row in rows
     ]
+
+
+class TagSearchResult(BaseModel):
+    song_id: str
+    title: str
+    artist: str
+    tag: str
+    tag_id: int
+
+
+@router.get("/search", response_model=List[TagSearchResult])
+def search_tags(text: str):
+    """
+    Search for songs by tag text (case-insensitive, partial match).
+    """
+    wildcard_text = f"%{text}%"
+
+    with db.engine.begin() as connection:
+        rows = connection.execute(
+            sqlalchemy.text(
+                """
+                SELECT 
+                    ut.track_id AS song_id,
+                    s.track_name,
+                    s.artists,
+                    ut.tag_text AS tag,
+                    ut.id AS tag_id
+                FROM user_tags ut
+                JOIN spotify_songs s ON ut.track_id = s.track_id
+                WHERE ut.tag_text ILIKE :search_text
+                ORDER BY ut.timestamp DESC
+                """
+            ),
+            {"search_text": wildcard_text},
+        ).fetchall()
+
+    return [
+        TagSearchResult(
+            song_id=row.song_id,
+            title=row.track_name,
+            artist=row.artists,
+            tag=row.tag,
+            tag_id=row.tag_id,
+        )
+        for row in rows
+    ]
