@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, HTTPException, status
 import sqlalchemy
 from src.api import auth
 from src import database as db
@@ -60,6 +60,12 @@ def login_user(user: User):
                 """
             ),
             {"username": user.username, "password": user.password},
-        ).one()
+        ).one_or_none()
+
+        if not id:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid username or password. User not found in the database.",
+            )
 
     return Creationresponse(id=id[0])
