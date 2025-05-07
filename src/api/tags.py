@@ -11,14 +11,17 @@ router = APIRouter(
     dependencies=[Depends(auth.get_api_key)],
 )
 
+
 class TagCreateRequest(BaseModel):
     user_id: int
     song_id: str
     tag_text: str
 
+
 class UpvoteRequest(BaseModel):
     user_id: int
     tag_id: int
+
 
 class TagResponse(BaseModel):
     tag_id: int
@@ -26,8 +29,10 @@ class TagResponse(BaseModel):
     tag_text: str
     upvotes: int
 
+
 class UpvoteResponse(BaseModel):
     message: str
+
 
 @router.post("", status_code=status.HTTP_201_CREATED)
 def create_tag(req: TagCreateRequest):
@@ -37,7 +42,7 @@ def create_tag(req: TagCreateRequest):
     with db.engine.begin() as connection:
         user_exists = connection.execute(
             sqlalchemy.text("SELECT 1 FROM account_users WHERE id = :uid"),
-            {"uid": req.user_id}
+            {"uid": req.user_id},
         ).fetchone()
         if not user_exists:
             raise HTTPException(status_code=404, detail="User not found")
@@ -48,16 +53,15 @@ def create_tag(req: TagCreateRequest):
                 VALUES (:user_id, :song_id, :tag_text)
                 RETURNING id
             """),
-            {
-                "user_id": req.user_id,
-                "song_id": req.song_id,
-                "tag_text": req.tag_text
-            }
+            {"user_id": req.user_id, "song_id": req.song_id, "tag_text": req.tag_text},
         ).one()
-    
+
     return {"tag_id": result[0], "message": "Tag created successfully"}
 
-@router.post("/upvote", response_model=UpvoteResponse, status_code=status.HTTP_202_ACCEPTED)
+
+@router.post(
+    "/upvote", response_model=UpvoteResponse, status_code=status.HTTP_202_ACCEPTED
+)
 def create_upvote(req: UpvoteRequest):
     """
     Upvote an existing tag with the creator's user id.
@@ -70,11 +74,11 @@ def create_upvote(req: UpvoteRequest):
                 WHERE tag_id = :tag_id AND user_id = :user_id
                 """
             ),
-            {"tag_id": req.tag_id, "user_id": req.user_id}
+            {"tag_id": req.tag_id, "user_id": req.user_id},
         ).fetchone()
         if existing_vote:
-            return UpvoteResponse(message= "User has already upvoted this tag")
-    
+            return UpvoteResponse(message="User has already upvoted this tag")
+
         connection.execute(
             sqlalchemy.text(
                 """
@@ -82,11 +86,12 @@ def create_upvote(req: UpvoteRequest):
                 VALUES (:tag_id, :user_id)
                 """
             ),
-            {"tag_id": req.tag_id, "user_id": req.user_id}
+            {"tag_id": req.tag_id, "user_id": req.user_id},
         )
-    
-    return  UpvoteResponse(message= "Successfully upvoted!")
-        
+
+    return UpvoteResponse(message="Successfully upvoted!")
+
+
 @router.get("/users/{user_id}/tags", response_model=List[TagResponse])
 def get_song_tags(user_id: int):
     """
@@ -94,7 +99,6 @@ def get_song_tags(user_id: int):
     """
 
     with db.engine.begin() as connection:
-
         # check if user exists
         user_exists = connection.execute(
             sqlalchemy.text(
@@ -104,12 +108,12 @@ def get_song_tags(user_id: int):
                 WHERE id = :uid
                 """
             ),
-            {"uid": user_id}
+            {"uid": user_id},
         ).one()
 
         if not user_exists:
             raise HTTPException(status_code=404, detail="User not found")
-        
+
         # query all tags of the user
         rows = connection.execute(
             sqlalchemy.text(
@@ -126,7 +130,7 @@ def get_song_tags(user_id: int):
                 ORDER BY ut.timestamp DESC
                 """
             ),
-            {"user_id": user_id}
+            {"user_id": user_id},
         ).fetchall()
 
     return [
@@ -134,10 +138,11 @@ def get_song_tags(user_id: int):
             tag_id=row.tag_id,
             song_id=row.song_id,
             tag_text=row.tag_text,
-            upvotes=row.upvotes
+            upvotes=row.upvotes,
         )
         for row in rows
     ]
+
 
 @router.get("/leaderboard", response_model=List[TagResponse])
 def get_leaderboard():
@@ -168,13 +173,9 @@ def get_leaderboard():
 
         for r in row:
             tag_response = TagResponse(
-                tag_id=r[0],
-                song_id=r[1],
-                tag_text=r[2],
-                upvotes=r[3]
+                tag_id=r[0], song_id=r[1], tag_text=r[2], upvotes=r[3]
             )
 
             leaderboard.append(tag_response)
 
     return leaderboard
-
