@@ -10,8 +10,15 @@ SonicLink is a backend API designed to enhance musical social interaction throug
 
 ## Endpoints 🎧
 
-### 0. `GET /account`
+### 1. `POST /account/new`
 **Create an account with SonicLink.**
+**Request Body:**
+```json
+{
+  "username": "myusername",
+  "password": "mypassword"
+}
+```
 
 **Responses:**
 | Code | Description |
@@ -27,9 +34,35 @@ SonicLink is a backend API designed to enhance musical social interaction throug
 }
 ```
 
+### 2. `GET /account/login`
+**Login to an existing account to fetch the user id.**
+
+**Request Body:**
+```json
+{
+  "username": "myusername",
+  "password": "mypassword"
+}
+```
+
+**Responses:**
+| Code | Description |
+| --- | --- |
+| 204 | Successful Response |
+| 4o1 | Unauthorized Error |
+| 422 | Validation Error |
+
+#### Example Response:
+
+```json
+{
+  "user_id": 123,
+}
+```
+
 ## Tags
 
-### 1. `POST /tags`
+### 3. `POST /tags`
 **Create a new tag for a song.**
 
 **Request Body:**
@@ -45,6 +78,7 @@ SonicLink is a backend API designed to enhance musical social interaction throug
 | Code | Description |
 | --- | --- |
 | 204 | Successful Response |
+| 400 | Bad Request |
 | 422 | Validation Error |
 
 ### 2. `POST /tags/upvote`
@@ -123,7 +157,7 @@ SonicLink is a backend API designed to enhance musical social interaction throug
   "song_id": "spotify:track:xyz",
   "timestamp_seconds": 45,
   "lyric": "You only need the light when it's burning low",
-  "tag": "hella deep bro"
+  "moment_text": "hella deep bro"
 }
 ```
 
@@ -131,6 +165,7 @@ SonicLink is a backend API designed to enhance musical social interaction throug
 | Code | Description |
 | --- | --- |
 | 204 | Successful Response |
+| 400 | Bad Request |
 | 422 | Validation Error |
 
 ## Challenges
