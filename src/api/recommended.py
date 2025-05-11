@@ -14,6 +14,7 @@ router = APIRouter(
 
 class Recommended(BaseModel):
     user_id: int
+
     
 
 @router.get("", response_model=List[Recommended])
@@ -33,6 +34,6 @@ def recommend(user_id: int):
                 AND other.user_id != :target_user_id;
                 """
             ),
-            {"target_user_id": user_id}
+            {"target_user_id": user_id},
         )
     return [Recommended(user_id=row.user_id) for row in result]

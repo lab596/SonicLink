@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+
 from src.api import account, carts, catalog, bottler, barrels, info, tags, lyricalmoments, recommended, challenges
 from starlette.middleware.cors import CORSMiddleware
 
@@ -47,6 +48,7 @@ app.include_router(barrels.router)
 app.include_router(account.router)
 app.include_router(tags.router)
 app.include_router(info.router)
+app.include_router(recommended.router)
 
 
 @app.get("/")

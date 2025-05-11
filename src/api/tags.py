@@ -46,8 +46,8 @@ def create_tag(req: TagCreateRequest):
         ).fetchone()
         if not user_exists:
             raise HTTPException(status_code=404, detail="User not found")
-        
-        #make sure song exists
+
+        # make sure song exists
         song = connection.execute(
             sqlalchemy.text(
                 "SELECT 1 FROM spotify_songs WHERE track_id = :songid"
