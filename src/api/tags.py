@@ -50,7 +50,7 @@ def create_tag(req: TagCreateRequest):
         #make sure song exists
         song = connection.execute(
             sqlalchemy.text(
-                "SELCT 1 FROM spotify_songs WHERE track_id = :songid"
+                "SELECT 1 FROM spotify_songs WHERE track_id = :songid"
             ),
             {"songid": req.song_id}
         ).first()
