@@ -180,7 +180,7 @@ def get_leaderboard():
             leaderboard.append(tag_response)
 
     return leaderboard
-=======
+
 class TagSearchResult(BaseModel):
     song_id: str
     title: str
