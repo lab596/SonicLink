@@ -178,8 +178,7 @@ SonicLink is a backend API designed to enhance musical social interaction throug
 {
   "user_id": 321,
   "title": "Best Summer Vibes",
-  "description": "Tag songs that scream summer!",
-  "song_id": "spotify:track:xyz"
+  "description": "Tag songs that scream summer!"
 }
 ```
 
