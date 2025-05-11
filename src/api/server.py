@@ -1,15 +1,6 @@
 from fastapi import FastAPI
-from src.api import (
-    account,
-    carts,
-    catalog,
-    bottler,
-    barrels,
-    info,
-    tags,
-    lyricalmoments,
-    recommended,
-)
+
+from src.api import account, carts, catalog, bottler, barrels, info, tags, lyricalmoments, recommended, challenges
 from starlette.middleware.cors import CORSMiddleware
 
 description = """
@@ -47,7 +38,8 @@ app.add_middleware(
     allow_methods=["GET", "OPTIONS"],
     allow_headers=["*"],
 )
-
+app.include_router(recommended.router)
+app.include_router(challenges.router)
 app.include_router(lyricalmoments.router)
 app.include_router(carts.router)
 app.include_router(catalog.router)

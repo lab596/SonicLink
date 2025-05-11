@@ -15,8 +15,9 @@ router = APIRouter(
 class Recommended(BaseModel):
     user_id: int
 
+    
 
-@router.post("", response_model=List[Recommended])
+@router.get("", response_model=List[Recommended])
 def recommend(user_id: int):
     """
     Recomends users that have made a tag with the same song or same tag title.
