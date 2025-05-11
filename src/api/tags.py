@@ -144,7 +144,6 @@ def get_song_tags(user_id: int):
     ]
 
 
-
 @router.get("/leaderboard", response_model=List[TagResponse])
 def get_leaderboard():
     with db.engine.begin() as connection:
@@ -180,6 +179,7 @@ def get_leaderboard():
             leaderboard.append(tag_response)
 
     return leaderboard
+
 
 class TagSearchResult(BaseModel):
     song_id: str
@@ -225,4 +225,3 @@ def search_tags(text: str):
         )
         for row in rows
     ]
-
