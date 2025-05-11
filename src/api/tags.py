@@ -154,6 +154,43 @@ def get_song_tags(user_id: int):
     ]
 
 
+@router.get("/leaderboard", response_model=List[TagResponse])
+def get_leaderboard():
+    with db.engine.begin() as connection:
+        row = connection.execute(
+            sqlalchemy.text(
+                """
+                SELECT 
+                    user_tags.id,
+                    user_tags.track_id,
+                    user_tags.tag_text,
+                    COUNT(user_tag_upvotes.id) AS upvote_count
+                FROM 
+                    user_tag_upvotes 
+                JOIN 
+                    user_tags ON user_tags.id = user_tag_upvotes.tag_id
+                WHERE 
+                    user_tag_upvotes.timestamp >= NOW() - INTERVAL '7 days'
+                GROUP BY 
+                    user_tags.tag_text, user_tags.id,  user_tags.track_id
+                ORDER BY 
+                    upvote_count DESC
+                LIMIT 10;
+                """
+            )
+        ).fetchall()
+        leaderboard = []
+
+        for r in row:
+            tag_response = TagResponse(
+                tag_id=r[0], song_id=r[1], tag_text=r[2], upvotes=r[3]
+            )
+
+            leaderboard.append(tag_response)
+
+    return leaderboard
+
+
 class TagSearchResult(BaseModel):
     song_id: str
     title: str
