@@ -49,7 +49,7 @@ def create_challenge(req: ChallengeCreateRequest):
     return {"challenge_id": result[0], "message": "Challenge created successfully"}
 
 @router.post("/{challenge_id}/submission", status_code=status.HTTP_204_NO_CONTENT)
-def checkout(challenge_id: int, req: SubmissionRequest):
+def submit_challenge(challenge_id: int, req: SubmissionRequest):
     """
     Sumbit a tag you've made to a challenge
     """
@@ -77,6 +77,8 @@ def checkout(challenge_id: int, req: SubmissionRequest):
         )
 
     return 
+
+d
         
 
 
