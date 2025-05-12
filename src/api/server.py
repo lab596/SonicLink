@@ -52,13 +52,8 @@ app.add_middleware(
 app.include_router(recommended.router)
 app.include_router(challenges.router)
 app.include_router(lyricalmoments.router)
-app.include_router(carts.router)
-app.include_router(catalog.router)
-app.include_router(bottler.router)
-app.include_router(barrels.router)
 app.include_router(account.router)
 app.include_router(tags.router)
-app.include_router(info.router)
 app.include_router(recommended.router)
 
 
