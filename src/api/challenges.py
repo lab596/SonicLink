@@ -24,6 +24,11 @@ class SubmissionRequest(BaseModel):
     user_id: int
     tag_id: int
 
+class ChallengeLeaderboard(BaseModel):
+    challenge_id: int
+    title: str
+    upvotes: int
+
 @router.post("", status_code=status.HTTP_201_CREATED)
 def create_challenge(req: ChallengeCreateRequest):
     """
@@ -78,7 +83,37 @@ def submit_challenge(challenge_id: int, req: SubmissionRequest):
 
     return 
 
-d
+@router.post("/weekly", response_model=List[ChallengeLeaderboard])
+def weekly_leaderboard():
+    with db.engine.begin() as connection:
+        row = connection.execute(
+            sqlalchemy.text(
+                """
+                SELECT
+                    challenges.id AS challenge_id,
+                    challenges.title,
+                    COUNT(DISTINCT user_tag_upvotes.id) AS total_upvotes
+                FROM challenges 
+                JOIN challenge_submissions  ON challenges.id = challenge_submissions.challenge_id
+                JOIN user_tags ON challenge_submissions.tag_submission = user_tags.id
+                LEFT JOIN user_tag_upvotes ON user_tag_upvotes.tag_id = user_tags.id
+                WHERE challenges.timestamp >= NOW() - INTERVAL '7 days'
+                GROUP BY challenges.id
+                ORDER BY total_upvotes DESC
+                """
+            )
+        ).fetchall()
+        leaderboard = []
+
+        for r in row:
+            tag_response = ChallengeLeaderboard(
+                challenge_id=r[0], title=r[1], upvotes=r[2]
+            )
+
+            leaderboard.append(tag_response)
+
+    return leaderboard
+
         
 
 
