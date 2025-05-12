@@ -1,5 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from pydantic import BaseModel, Field
+from fastapi import APIRouter, Depends
+from pydantic import BaseModel
 import sqlalchemy
 from src.api import auth
 from src import database as db
@@ -15,7 +15,6 @@ router = APIRouter(
 class Recommended(BaseModel):
     user_id: int
 
-    
 
 @router.get("", response_model=List[Recommended])
 def recommend(user_id: int):

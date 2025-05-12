@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 import sqlalchemy
 from src.api import auth
 from src import database as db
@@ -15,19 +15,23 @@ router = APIRouter(
 class ChallengeResponse(BaseModel):
     user_id: int
 
+
 class ChallengeCreateRequest(BaseModel):
     user_id: int
     title: str
     description: str
 
+
 class SubmissionRequest(BaseModel):
     user_id: int
     tag_id: int
+
 
 class ChallengeLeaderboard(BaseModel):
     challenge_id: int
     title: str
     upvotes: int
+
 
 @router.post("", status_code=status.HTTP_201_CREATED)
 def create_challenge(req: ChallengeCreateRequest):
@@ -41,17 +45,21 @@ def create_challenge(req: ChallengeCreateRequest):
         ).fetchone()
         if not user_exists:
             raise HTTPException(status_code=404, detail="User not found")
-        
-        
+
         result = connection.execute(
             sqlalchemy.text("""
                 INSERT INTO challenges (user_id, description, title)
                 VALUES (:user_id, :description, :title)
                 RETURNING id
             """),
-            {"user_id": req.user_id,  "title": req.title, "description": req.description},
+            {
+                "user_id": req.user_id,
+                "title": req.title,
+                "description": req.description,
+            },
         ).one()
     return {"challenge_id": result[0], "message": "Challenge created successfully"}
+
 
 @router.post("/{challenge_id}/submission", status_code=status.HTTP_204_NO_CONTENT)
 def submit_challenge(challenge_id: int, req: SubmissionRequest):
@@ -65,23 +73,28 @@ def submit_challenge(challenge_id: int, req: SubmissionRequest):
         ).fetchone()
         if not challenge_exists:
             raise HTTPException(status_code=404, detail="Challenge not found")
-        
+
         tag_exists = connection.execute(
             sqlalchemy.text("SELECT 1 FROM user_tags WHERE id = :tag_id"),
             {"tag_id": req.tag_id},
         ).fetchone()
         if not tag_exists:
             raise HTTPException(status_code=404, detail="Tag not found")
-        
+
         connection.execute(
             sqlalchemy.text("""
                 INSERT INTO challenge_submissions (user_id, challenge_id, tag_submission)
                 VALUES (:user_id, :challenge_id, :tag_submission)
             """),
-            {"user_id": req.user_id,  "challenge_id": challenge_id, "tag_submission": req.tag_id},
+            {
+                "user_id": req.user_id,
+                "challenge_id": challenge_id,
+                "tag_submission": req.tag_id,
+            },
         )
 
-    return 
+    return
+
 
 @router.post("/weekly", response_model=List[ChallengeLeaderboard])
 def weekly_leaderboard():
@@ -113,7 +126,3 @@ def weekly_leaderboard():
             leaderboard.append(tag_response)
 
     return leaderboard
-
-        
-
-
