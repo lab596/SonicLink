@@ -5,7 +5,6 @@ import sqlalchemy
 from src.api import auth
 from src import database as db
 from typing import List
-from nltk.sentiment import SentimentIntensityAnalyzer
 from sentence_transformers import SentenceTransformer, util
 
 
@@ -22,8 +21,6 @@ class Recommended(BaseModel):
     similarity_score: float
 
     
-sia = SentimentIntensityAnalyzer()
-
 @router.get("/{user_id}", response_model=List[Recommended])
 def recommend(user_id: int):
     """
