@@ -12,7 +12,7 @@ config.set_main_option(
     "sqlalchemy.url",
     os.getenv(
         "POSTGRES_URI",
-        "postgresql+psycopg://myuser2:mypassword2@localhost:5400/mydatabase2",
+        "postgresql+psycopg://postgres.dslswnsgfbphbgfgfjel:supersecurepassword@aws-0-us-west-1.pooler.supabase.com:5432/postgres",
     ),
 )
 
