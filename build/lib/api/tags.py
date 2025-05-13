@@ -49,8 +49,10 @@ def create_tag(req: TagCreateRequest):
 
         # make sure song exists
         song = connection.execute(
-            sqlalchemy.text("SELECT 1 FROM spotify_songs WHERE track_id = :songid"),
-            {"songid": req.song_id},
+            sqlalchemy.text(
+                "SELECT 1 FROM spotify_songs WHERE track_id = :songid"
+            ),
+            {"songid": req.song_id}
         ).first()
         if not song:
             raise HTTPException(status_code=404, detail="Song not found")
