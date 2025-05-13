@@ -8,7 +8,6 @@ Jeffery Bezos wants to kick off a friendly tagging contest around sad songs that
 
 2. His friend Elon participates by calling `POST /challenges/1/submissions` with:
    - tag_id: 4
-   - tag_text: "So Sad!!!!"
 
 3. Other users vote on Elon's tag via `POST /tags/upvote`.
 
@@ -100,7 +99,17 @@ curl -X 'POST' \
   {
     "challenge_id": 1,
     "title": "Sad but Strong",
+    "upvotes": 4
+  },
+  {
+    "challenge_id": 3,
+    "title": "Happy stuff!",
     "upvotes": 2
+  },
+  {
+    "challenge_id": 2,
+    "title": "Workout Songs!",
+    "upvotes": 1
   }
 ]
 ```
