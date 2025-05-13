@@ -2,11 +2,6 @@ from fastapi import FastAPI
 
 from src.api import (
     account,
-    carts,
-    catalog,
-    bottler,
-    barrels,
-    info,
     tags,
     lyricalmoments,
     recommended,
