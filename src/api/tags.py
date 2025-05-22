@@ -82,7 +82,7 @@ def create_upvote(req: UpvoteRequest):
         if not user_exists:
             raise HTTPException(status_code=404, detail="User not found")
 
-        # make sure song exists
+
         tag = connection.execute(
             sqlalchemy.text("SELECT 1 FROM spotify_songs WHERE tag_id = :tag"),
             {"tag": req.tag_id},
