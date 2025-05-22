@@ -16,12 +16,12 @@ class User(BaseModel):
     password: str
 
 
-class Creationresponse(BaseModel):
+class UserIDResponse(BaseModel):
     id: int
 
 
 @router.post(
-    "/new", response_model=Creationresponse, status_code=status.HTTP_201_CREATED
+    "/new", response_model=UserIDResponse, status_code=status.HTTP_201_CREATED
 )
 def create_new(user: User):
     """
@@ -38,13 +38,13 @@ def create_new(user: User):
                 """
             ),
             {"username": user.username, "password": user.password},
-        ).one()
+        ).scalar_one()
 
-    return Creationresponse(id=id[0])
+    return UserIDResponse(id=id[0])
 
 
 @router.post(
-    "/login", response_model=Creationresponse, status_code=status.HTTP_201_CREATED
+    "/login", response_model=UserIDResponse, status_code=status.HTTP_201_CREATED
 )
 def login_user(user: User):
     """
@@ -68,4 +68,4 @@ def login_user(user: User):
                 detail="Invalid username or password. User not found in the database.",
             )
 
-    return Creationresponse(id=id[0])
+    return UserIDResponse(id=id[0])

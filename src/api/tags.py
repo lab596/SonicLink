@@ -34,7 +34,7 @@ class UpvoteResponse(BaseModel):
     message: str
 
 
-@router.post("", status_code=status.HTTP_201_CREATED)
+@router.post("/new", status_code=status.HTTP_201_CREATED)
 def create_tag(req: TagCreateRequest):
     """
     Create a new tag for a song.
@@ -75,6 +75,23 @@ def create_upvote(req: UpvoteRequest):
     Upvote an existing tag with the creator's user id.
     """
     with db.engine.begin() as connection:
+        # make sure user exists
+        user_exists = connection.execute(
+            sqlalchemy.text("SELECT 1 FROM account_users WHERE id = :uid"),
+            {"uid": req.user_id},
+        ).fetchone()
+        if not user_exists:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        # make sure tag exists
+        tag = connection.execute(
+            sqlalchemy.text("SELECT 1 FROM user_tags WHERE id = :tag_id"),
+            {"tag_id": req.tag_id},
+        ).first()
+        if not tag:
+            raise HTTPException(status_code=404, detail="Tag not found")
+
+        # check existing vote
         existing_vote = connection.execute(
             sqlalchemy.text(
                 """
@@ -84,6 +101,7 @@ def create_upvote(req: UpvoteRequest):
             ),
             {"tag_id": req.tag_id, "user_id": req.user_id},
         ).fetchone()
+
         if existing_vote:
             return UpvoteResponse(message="User has already upvoted this tag")
 
@@ -154,6 +172,9 @@ def get_song_tags(user_id: int):
 
 @router.get("/leaderboard", response_model=List[TagResponse])
 def get_leaderboard():
+    """
+    Returns the top 10 most upvoted tags
+    """
     with db.engine.begin() as connection:
         row = connection.execute(
             sqlalchemy.text(
@@ -177,6 +198,7 @@ def get_leaderboard():
                 """
             )
         ).fetchall()
+
         leaderboard = []
 
         for r in row:

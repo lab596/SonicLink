@@ -12,8 +12,8 @@ router = APIRouter(
 )
 
 
-class ChallengeResponse(BaseModel):
-    user_id: int
+# class ChallengeResponse(BaseModel):
+#     user_id: int
 
 
 class ChallengeCreateRequest(BaseModel):
@@ -33,10 +33,10 @@ class ChallengeLeaderboard(BaseModel):
     upvotes: int
 
 
-@router.post("", status_code=status.HTTP_201_CREATED)
+@router.post("/new", status_code=status.HTTP_201_CREATED)
 def create_challenge(req: ChallengeCreateRequest):
     """
-    Recomends users that have made a tag with the same song or same tag title.
+    Creates a new challenge with a title and description for users to add their tags
     """
     with db.engine.begin() as connection:
         user_exists = connection.execute(

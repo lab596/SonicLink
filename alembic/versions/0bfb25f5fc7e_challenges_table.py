@@ -62,4 +62,4 @@ def downgrade() -> None:
     op.drop_table("challenge_submissions") 
     op.drop_table("lyrical_moments")
     op.drop_table("challenges")
-    op.drop_table("challenge_submissions")
+   
