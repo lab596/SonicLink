@@ -28,8 +28,29 @@ def create_new(user: User):
     """
     Create a new account by setting a username and password. Returns the id of the newly created account.
     """
-    hashed_pw = bcrypt.hashpw(user.password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+    #check password length
+    if len(user.password) > 30:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Password too long. Please use a password with 30 characters or fewer.",
+        )
 
+    #check if username exists (im too lazy to change schema)
+    with db.engine.begin() as connection:
+        existing = connection.execute(
+            sqlalchemy.text(
+                "SELECT id FROM account_users WHERE username = :username"
+            ),
+            {"username": user.username},
+        ).one_or_none()
+        if existing:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Username is already taken. Please choose a different one.",
+            )
+    
+    
+    hashed_pw = bcrypt.hashpw(user.password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
     with db.engine.begin() as connection:
         result = connection.execute(
             sqlalchemy.text(
