@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+import bcrypt
 import sqlalchemy
 from src.api import auth
 from src import database as db
@@ -27,9 +28,10 @@ def create_new(user: User):
     """
     Create a new account by setting a username and password. Returns the id of the newly created account.
     """
+    hashed_pw = bcrypt.hashpw(user.password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
     with db.engine.begin() as connection:
-        id = connection.execute(
+        result = connection.execute(
             sqlalchemy.text(
                 """
                 INSERT INTO account_users (username, password) 
@@ -37,10 +39,10 @@ def create_new(user: User):
                 RETURNING id
                 """
             ),
-            {"username": user.username, "password": user.password},
+            {"username": user.username, "password": hashed_pw},
         ).one()
-
-    return Creationresponse(id=id[0])
+        
+    return Creationresponse(id=result[0])
 
 
 @router.post(
@@ -52,20 +54,29 @@ def login_user(user: User):
     """
 
     with db.engine.begin() as connection:
-        id = connection.execute(
+        result = connection.execute(
             sqlalchemy.text(
                 """
-                SELECT id FROM account_users 
-                WHERE username = :username AND password = :password
+                SELECT id, password FROM account_users 
+                WHERE username = :username
                 """
             ),
-            {"username": user.username, "password": user.password},
+            {"username": user.username},
         ).one_or_none()
 
-        if not id:
+        if not result:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid username or password. User not found in the database.",
             )
+        
+        #check password
+        if not bcrypt.checkpw(user.password.encode("utf-8"), result[1].encode("utf-8")):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid username or password.",
+            )
+         
+         
 
-    return Creationresponse(id=id[0])
+    return Creationresponse(id=result[0])
