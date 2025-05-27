@@ -22,7 +22,7 @@ class MomentCreateRequest(BaseModel):
 @router.post("", status_code=status.HTTP_201_CREATED)
 def create_moment(req: MomentCreateRequest):
     """
-    Create a new tag for a song.
+    Create a new lyrical moment for a song.
     """
     with db.engine.begin() as connection:
         # make sure the user exists

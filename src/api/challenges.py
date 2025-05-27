@@ -33,6 +33,7 @@ class ChallengeLeaderboard(BaseModel):
     upvotes: int
 
 
+#TODO: can make this a complex endpoint
 @router.post("", status_code=status.HTTP_201_CREATED)
 def create_challenge(req: ChallengeCreateRequest):
     """
