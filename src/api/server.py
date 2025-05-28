@@ -6,6 +6,7 @@ from src.api import (
     lyricalmoments,
     recommended,
     challenges,
+    songs,
 )
 from starlette.middleware.cors import CORSMiddleware
 
@@ -50,6 +51,7 @@ app.include_router(lyricalmoments.router)
 app.include_router(account.router)
 app.include_router(tags.router)
 app.include_router(recommended.router)
+app.include_router(songs.router)
 
 
 @app.get("/")
