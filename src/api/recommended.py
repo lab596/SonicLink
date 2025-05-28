@@ -90,7 +90,11 @@ def recommend(user_id: int):
             avg_similarity = total_similarity / comparison
             if avg_similarity >= 0.6:  #arbitrary threshold
                 recommendations.append(
-                    Recommended(user_id=other_uid, similarity_score=round(avg_similarity, 3))
+                    Recommended(
+                        user_id=other_uid, 
+                        similarity_score=round(avg_similarity, 3),
+                        message="Recommended user found!"
+                    )
                 )
         
     #sort similiarity
