@@ -1,10 +1,10 @@
 # Concurrency in SonicLink
 
-## 1. **Lost Update**
+## 1. **Phantom Read On Upvote** 
 
 ### Scenario
 
-Two users try to upvote the same tag at the same time. Both read the current upvote count, increment it, and write back the result. Without concurrency control, one update is lost.
+One user is attempting to retieve their tags and its number of upvotes while another user is attempting to upvote said tag. If user one reads the number of rows from the `user_tags_upvotes` table, but then process T1 gets switched to user two who upvotes that tag. Rerunning the read of `user_tags_upvotes` in T1 will be a different reseult. Without concurrency control, the tag upvotes are inconsistent.
 
 ### Sequence Diagram
 
@@ -13,31 +13,27 @@ User A                Database                User B
   |                       |                     |
   |---Read upvotes------->|                     |
   |<--upvotes=5-----------|                     |
-  |                                             |
-  |                       |<---Read upvotes-----|
-  |                       |---upvotes=5-------> |
-  |                                             |
-  |---upvotes=6---------->|                     |
   |                       |                     |
-  |                       |<--upvotes=6-------- |
+  |                       |<--upvotes=6---------|
   |                       |                     |
-  |                       |---upvotes=6-------->|
+  |---Read upvotes------->|                     |
+  |<--upvotes=6-----------|                     |
+  |                       |                     |
   |                       |                     |
 ```
-**Result:** Both users see 5, both write 6. One increment is lost.
+**Result:** When user one does the exact same read call it returns a different value.
 
 ### Solution
 
-- Use `SERIALIZABLE` isolation or optimistic locking (e.g., check the upvote count/version before updating).
-- Use SQL: `UPDATE ... SET upvotes = upvotes + 1 WHERE ...` to ensure atomicity.
+- Use `REPEATABLE READ` or `SERIALIZABLE` isolation to prevent phantoms.
 
 ---
 
-## 2. **Dirty Read** 
+## 2. **Dirty Read On Challenge Creation** 
 
 ### Scenario
 
-User A starts creating a challenge but hasn't committed yet. User B queries the weekly leaderboard and sees the uncommitted challenge. If User A rolls back, User B has seen data that never existed.
+User A starts creating a challenge adn it is inserted into the challenge table but hasn't committed yet. User B queries the weekly leaderboard and sees the uncommitted challenge. If User A rolls back, User B has seen data that never existed.
 
 ### Sequence Diagram
 
@@ -58,11 +54,11 @@ User A                Database                User B
 
 ---
 
-## 3. **Phantom Read**
+## 3. **Phantom Read In Tag Leaderboards**
 
 ### Scenario
 
-User A queries all challenges for the leaderboard. User B creates a new challenge and commits. User A queries again in the same transaction and sees the new challenge.
+User one queries the top tags using the leaderboard endpoint. User two upvotes a new tag that causes a shift in the leaderboard. User one queries leaderboard endpoint again in the same tranasaction and the result is not the same.
 
 ### Sequence Diagram
 
@@ -70,16 +66,16 @@ User A queries all challenges for the leaderboard. User B creates a new challeng
 User A                Database                User B
   |                        |                     |
   |---Begin Tx------------>|                     |
-  |---Query challenges---> |                     |
-  |<--[challenge 1,2]------|                     |
+  |---Query leaderboard--->|                     |
+  |<--[tag 1,2]------------|                     |
   |                        |---Begin Tx--------->|
-  |                        |---Insert challenge->|
+  |                        |---Upvote Tag------->|
   |                        |---Commit----------->|
   |---Query challenges---> |                     |
-  |<--[challenge 1,2,3]----|                     |
+  |<--[tag 1,2,3]----------|                     |
   |---Commit-------------> |                     |
 ```
-**Result:** User A sees a "phantom" challenge appear during their transaction.
+**Result:** User one sees a "phantom" tag appear during their transaction.
 
 ### Solution
 
@@ -88,9 +84,9 @@ User A                Database                User B
 
 ---
 
-## Ensuring Isolation in SonicLink
+## Ensuring Isolation
 
 - **Upvotes and similar counters:** Use atomic SQL updates or optimistic locking to prevent lost updates.
 - **Challenge creation and leaderboard:** Use at least `READ COMMITTED` isolation to avoid dirty reads.
-- **Leaderboard queries:** Use `REPEATABLE READ` or snapshot isolation if you need consistent results within a transaction.
+- **Tag Leaderboard queries:** Use `REPEATABLE READ` or snapshot isolation if you need consistent results within a transaction.
 
