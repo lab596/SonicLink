@@ -17,12 +17,12 @@ class User(BaseModel):
     password: str
 
 
-class Creationresponse(BaseModel):
+class UserIDResponse(BaseModel):
     id: int
 
 
 @router.post(
-    "/new", response_model=Creationresponse, status_code=status.HTTP_201_CREATED
+    "/new", response_model=UserIDResponse, status_code=status.HTTP_201_CREATED
 )
 def create_new(user: User):
     """
@@ -66,8 +66,9 @@ def create_new(user: User):
     return Creationresponse(id=result[0])
 
 
+
 @router.post(
-    "/login", response_model=Creationresponse, status_code=status.HTTP_201_CREATED
+    "/login", response_model=UserIDResponse, status_code=status.HTTP_201_CREATED
 )
 def login_user(user: User):
     """

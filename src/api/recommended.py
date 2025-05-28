@@ -27,19 +27,30 @@ def recommend(user_id: int):
     """
     
     with db.engine.begin() as connection:
+        # make sure user exists
+        user_exists = connection.execute(
+            sqlalchemy.text("SELECT 1 FROM account_users WHERE id = :uid"),
+            {"uid": user_id},
+        ).fetchone()
+        if not user_exists:
+            raise HTTPException(status_code=404, detail="User not found")
+        
        #fetches tags the user has created
         user_tags = connection.execute(
             sqlalchemy.text("""
-                SELECT tag_text, track_id
+                SELECT tag_text
                 FROM user_tags
                 WHERE user_id = :uid
             """), {"uid": user_id}
         ).fetchall()
+
+        if len(user_tags) == 0:
+            return f"User {user_id} has no tags, please make some before we can reccomend other users!"
         
         #get the tags of other users
         other_tags = connection.execute(
             sqlalchemy.text("""
-                SELECT user_id, tag_text, track_id
+                SELECT user_id, tag_text
                 FROM user_tags
                 WHERE user_id != :uid
             """), {"uid": user_id}
