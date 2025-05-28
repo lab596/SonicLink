@@ -6,7 +6,7 @@
 
 Rohan discovers a new Japenese bop track that reminds him of Tokyo Drift. He decides to tag the song.
 
-1. Rohan calls `GET /account` since he doesnt have an account yet. This generates his user id.
+1. Rohan calls `GET /account/new` since he doesnt have an account yet. This generates his user id.
 
 2. Rohan calls `POST /tags` with:
    - user_id: 1
@@ -27,12 +27,18 @@ Jeffery Bezos wants to kick off a friendly tagging contest around sad songs that
    - title: "Sad but Strong"
    - song_id: "spotify:track:def789"
 
-2. His friend Elon participates by calling `POST /challenges/789/submissions` with:
-   - tag_text: "cry then conquer"
+2. His friend Elon participates by creating a tag with `POST /tags`
+   - user_id: 2
+   - song_id: "spotify:track:abc123"
+   - tag_text: "So Sad!!!!"
+
+   and then submiting their tag to the challenge by calling `POST /challenges/789/submissions` with:
+   - user_id: 2
+   - tag_id: 4
 
 3. Other users vote on Elon's tag via `POST /tags/upvote`.
 
-4. At the end of the week, Jeffery calls `GET /challenges/weekly` and `GET /leaderboard/tags` to see what’s trending and how his challenge did.
+4. At the end of the week, Jeffery calls `GET /challenges/weekly` and `GET tags/leaderboard` to see what’s trending and how his challenge did.
 
 ---
 ## Flow 3: Linking with Other Users 👯

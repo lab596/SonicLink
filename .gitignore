@@ -7,3 +7,4 @@ __pycache__
 info.log
 .DS_Store
 *.txt
+*.env

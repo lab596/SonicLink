@@ -5,6 +5,7 @@ alembic==1.15.2
 annotated-types==0.7.0
     # via pydantic
 anyio==4.9.0
+bcrypt==4.3.0
     # via starlette
 certifi==2025.1.31
     # via requests
@@ -44,6 +45,7 @@ joblib==1.5.0
     # via scikit-learn
 kagglehub==0.3.12
     # via soniclink (pyproject.toml)
+Levenshtein==0.27.1
 mako==1.3.9
     # via alembic
 markupsafe==3.0.2
