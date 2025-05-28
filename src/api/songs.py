@@ -16,6 +16,7 @@ class SongRequest(BaseModel):
 class SongResponse(BaseModel):
     song_title: str
     song_id: str
+    duration: int
 
 @router.get("/{search}", response_model=List[SongResponse])
 def get_songs(search: str):
@@ -30,7 +31,8 @@ def get_songs(search: str):
                 """ 
                 SELECT
                     track_name,
-                    track_id
+                    track_id,
+                    duration
                 FROM spotify_songs
                 WHERE track_name ILIKE :search
                 LIMIT 50
@@ -43,6 +45,7 @@ def get_songs(search: str):
         SongResponse(
             song_title= r.track_name,
             song_id=r.track_id,
+            duration = r.duration,
         )
         for r in row
     ]
