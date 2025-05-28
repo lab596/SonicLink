@@ -229,7 +229,7 @@ SonicLink is a backend API designed to enhance musical social interaction throug
 | 204 | Successful Response |
 | 404 | Challenge not Found |
 
-### 8. `GET /challenges/weekly`
+### 8. `GET /challenges/weekly` (COMPLEX ENDPOINT)
 **Get this week's public community challenges.**
 
 **Responses:**
@@ -272,7 +272,7 @@ SonicLink is a backend API designed to enhance musical social interaction throug
   ...
 ]
 ```
-### 10. `GET /recommended`
+### 10. `GET /recommended` (COMPLEX ENDPOINT)
 **Get recommended users who have contributed to similar things as you.**
 
 **Responses:**
