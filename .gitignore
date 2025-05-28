@@ -1,7 +1,6 @@
 .vercel
 venv
 .idea
-/Users/anna/365potion/SonicLink/alembic/env.py
 __pycache__
 *.env
 info.log
