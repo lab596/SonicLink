@@ -23,7 +23,7 @@ SonicLink is a backend API designed to enhance musical social interaction throug
 **Responses:**
 | Code | Description |
 | --- | --- |
-| 204 | Successful Response |
+| 201 | Created |
 | 422 | Validation Error |
 
 #### Example Response:
@@ -48,7 +48,7 @@ SonicLink is a backend API designed to enhance musical social interaction throug
 **Responses:**
 | Code | Description |
 | --- | --- |
-| 204 | Successful Response |
+| 201 | Created |
 | 4o1 | Unauthorized Error |
 | 422 | Validation Error |
 
@@ -73,11 +73,18 @@ SonicLink is a backend API designed to enhance musical social interaction throug
   "tag_text": "lowk a bop"
 }
 ```
+#### Example Response:
 
+```json
+{
+  "tag_id": 123,
+  "message": "Tag created successfully"
+}
+```
 **Responses:**
 | Code | Description |
 | --- | --- |
-| 204 | Successful Response |
+| 201 | Created |
 | 400 | Bad Request |
 | 422 | Validation Error |
 
@@ -91,11 +98,19 @@ SonicLink is a backend API designed to enhance musical social interaction throug
   "tag_id": 456,
 }
 ```
+#### Example Response:
+
+```json
+{
+  "message": "Successfully upvoted!"
+}
+```
+
 
 **Responses:**
 | Code | Description |
 | --- | --- |
-| 204 | Successful Response |
+| 202 | Accepted |
 | 422 | Validation Error |
 
 ### 3. `GET /users/:user_id/tags`
@@ -185,7 +200,7 @@ SonicLink is a backend API designed to enhance musical social interaction throug
 **Responses:**
 | Code | Description |
 | --- | --- |
-| 204 | Successful Response |
+| 201 | Accepted |
 | 422 | Validation Error |
 
 #### Example Response:
@@ -193,10 +208,11 @@ SonicLink is a backend API designed to enhance musical social interaction throug
 ```json
 {
   "challenge_id": 123,
+  "message": "Challenge created successfully"
 }
 ```
 
-### 7. `POST /challenges/:id/submit`
+### 7. `POST /challenges/:id/submission`
 **Submit a tag to an existing challenge.**
 
 **Request Body:**
@@ -213,7 +229,7 @@ SonicLink is a backend API designed to enhance musical social interaction throug
 | 204 | Successful Response |
 | 404 | Challenge not Found |
 
-### 8. `GET /challenges/suggested`
+### 8. `GET /challenges/weekly`
 **Get this week's public community challenges.**
 
 **Responses:**

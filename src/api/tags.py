@@ -75,7 +75,6 @@ def create_upvote(req: UpvoteRequest):
     Upvote an existing tag with the creator's user id.
     """
     with db.engine.begin() as connection:
-        # make sure user exists
         user_exists = connection.execute(
             sqlalchemy.text("SELECT 1 FROM account_users WHERE id = :uid"),
             {"uid": req.user_id},
@@ -83,7 +82,7 @@ def create_upvote(req: UpvoteRequest):
         if not user_exists:
             raise HTTPException(status_code=404, detail="User not found")
 
-        # make sure tag exists
+
         tag = connection.execute(
             sqlalchemy.text("SELECT 1 FROM user_tags WHERE id = :tag_id"),
             {"tag_id": req.tag_id},
@@ -92,6 +91,16 @@ def create_upvote(req: UpvoteRequest):
             raise HTTPException(status_code=404, detail="Tag not found")
 
         # check existing vote
+
+
+        tag = connection.execute(
+            sqlalchemy.text("SELECT 1 FROM spotify_songs WHERE tag_id = :tag"),
+            {"tag": req.tag_id},
+        ).first()
+        if not tag:
+            raise HTTPException(status_code=404, detail="Tag not found")
+        
+
         existing_vote = connection.execute(
             sqlalchemy.text(
                 """

@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12.9"
 dependencies = [
     "alembic>=1.15.2",
+    "bcrypt>=4.3.0",
     "fastapi>=0.115.11",
     "mypy>=1.15.0",
     "psycopg>=3.2.6",
@@ -17,7 +18,7 @@ dependencies = [
     "uv>=0.6.11",
     "uvicorn>=0.34.0",
     "kagglehub>=0.3.12",
-    "sentence-transformers>=4.1.0",
+    "Levenshtein>=0.27.1",
 ]
 
 [tool.pytest.ini_options]
