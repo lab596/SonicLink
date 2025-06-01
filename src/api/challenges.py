@@ -11,11 +11,6 @@ router = APIRouter(
     dependencies=[Depends(auth.get_api_key)],
 )
 
-
-# class ChallengeResponse(BaseModel):
-#     user_id: int
-
-
 class ChallengeCreateRequest(BaseModel):
     user_id: int
     title: str
@@ -61,7 +56,7 @@ def create_challenge(req: ChallengeCreateRequest):
     return {"challenge_id": result[0], "message": "Challenge created successfully"}
 
 
-@router.post("/{challenge_id}/submission", status_code=status.HTTP_204_NO_CONTENT)
+@router.post("/{challenge_id}/submission", status_code=status.HTTP_201_CREATED)
 def submit_challenge(challenge_id: int, req: SubmissionRequest):
     """
     Sumbit a tag you've made to a challenge
@@ -81,6 +76,13 @@ def submit_challenge(challenge_id: int, req: SubmissionRequest):
         if not tag_exists:
             raise HTTPException(status_code=404, detail="Tag not found")
 
+        user_exists = connection.execute(
+            sqlalchemy.text("SELECT 1 FROM account_users WHERE id = :uid"),
+            {"uid": req.user_id},
+        ).fetchone()
+        if not user_exists:
+            raise HTTPException(status_code=404, detail="User not found")
+
         connection.execute(
             sqlalchemy.text("""
                 INSERT INTO challenge_submissions (user_id, challenge_id, tag_submission)
@@ -92,8 +94,7 @@ def submit_challenge(challenge_id: int, req: SubmissionRequest):
                 "tag_submission": req.tag_id,
             },
         )
-
-    return
+        return {"message": "Challenge submission created successfully"}
 
 
 @router.post("/weekly", response_model=List[ChallengeLeaderboard])
