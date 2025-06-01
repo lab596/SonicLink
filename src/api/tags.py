@@ -84,7 +84,7 @@ def create_upvote(req: UpvoteRequest):
 
 
         tag = connection.execute(
-            sqlalchemy.text("SELECT 1 FROM spotify_songs WHERE tag_id = :tag"),
+            sqlalchemy.text("SELECT 1 FROM user_tags WHERE id = :tag"),
             {"tag": req.tag_id},
         ).first()
         if not tag:
