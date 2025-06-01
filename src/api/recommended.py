@@ -2,6 +2,7 @@
 from collections import defaultdict
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
+from typing import Optional
 import sqlalchemy
 from src.api import auth
 from src import database as db
@@ -16,8 +17,9 @@ router = APIRouter(
 
 
 class Recommended(BaseModel):
-    user_id: int
-    similarity_score: float
+    user_id: Optional[int] = None
+    similarity_score: Optional[float] = None
+    message: str
 
     
 @router.get("/{user_id}", response_model=List[Recommended])
@@ -45,7 +47,13 @@ def recommend(user_id: int):
         ).fetchall()
 
         if len(user_tags) == 0:
-            return f"User {user_id} has no tags, please make some before we can reccomend other users!"
+            print("user has no tags")
+            return [Recommended(
+                user_id=None, 
+                similarity_score=None,
+                message="User has no tags"
+                )
+            ]
         
         #get the tags of other users
         other_tags = connection.execute(
@@ -82,7 +90,11 @@ def recommend(user_id: int):
             avg_similarity = total_similarity / comparison
             if avg_similarity >= 0.6:  #arbitrary threshold
                 recommendations.append(
-                    Recommended(user_id=other_uid, similarity_score=round(avg_similarity, 3))
+                    Recommended(
+                        user_id=other_uid, 
+                        similarity_score=round(avg_similarity, 3),
+                        message="Recommended user found!"
+                    )
                 )
         
     #sort similiarity
