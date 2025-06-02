@@ -5,34 +5,33 @@ from tqdm import tqdm
 
 fake = Faker()
 conn = psycopg.connect(
-    dbname="mydatabase2",
-    user="myuser2",
-    password="mypassword2",
+    dbname="mydatabase",
+    user="myuser",
+    password="mypassword",
     host="localhost",
-    port=5400
+    port=5431
 )
 cur = conn.cursor()
 
-# UNCOMMENT THIS SECTION FIRST TO ADD 5K USERS
+#UNCOMMENT THIS SECTION FIRST TO ADD 5K USERS
 
+users = []
+for _ in tqdm(range(5000), desc="Users"):
+    users.append((fake.user_name(), fake.password()))
 
-# users = []
-# for _ in tqdm(range(5000), desc="Users"):
-#     users.append((fake.user_name(), fake.password()))
+placeholders = ', '.join(['(%s, %s)'] * len(users))
+flat_values = [val for pair in users for val in pair] 
 
-# placeholders = ', '.join(['(%s, %s)'] * len(users))
-# flat_values = [val for pair in users for val in pair] 
+query = f"""
+    INSERT INTO account_users (username, password)
+    VALUES {placeholders}
+    RETURNING id
+"""
 
-# query = f"""
-#     INSERT INTO account_users (username, password)
-#     VALUES {placeholders}
-#     RETURNING id
-# """
-
-# cur.execute(query, flat_values)
-# user_ids = [row[0] for row in cur.fetchall()]
-# conn.commit()
-# print(f"Inserted {len(user_ids)} users.")
+cur.execute(query, flat_values)
+user_ids = [row[0] for row in cur.fetchall()]
+conn.commit() 
+print(f"Inserted {len(user_ids)} users.")
 
 
 

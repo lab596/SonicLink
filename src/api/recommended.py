@@ -67,6 +67,7 @@ def recommend(user_id: int):
     #using an ai model to judge tag similiarity
     user_tag_texts = [tag.tag_text for tag in user_tags]
     if not user_tag_texts:
+        print("not")
         return []
         
     #fetch other user tags
