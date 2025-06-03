@@ -114,6 +114,7 @@ def weekly_leaderboard():
                 WHERE challenges.timestamp >= NOW() - INTERVAL '7 days'
                 GROUP BY challenges.id
                 ORDER BY total_upvotes DESC
+                LIMIT 10
                 """
             )
         ).fetchall()
