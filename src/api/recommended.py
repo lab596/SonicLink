@@ -9,6 +9,7 @@ from src import database as db
 from typing import List
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
 
 router = APIRouter(
     prefix="/recommended",
@@ -62,33 +63,50 @@ def recommend(user_id: int):
             message="User has no tags"
         )]
     
-    user_ids = []
-    documents = []
+    targegt_tags = user_tag_docs[user_id]
+    other_user_tags = []
+    tag_owners = []
     for uid, tags, in user_tag_docs.items():
-        user_ids.append(uid)
-        documents.append(" ".join(tags))
-
-    vectorizer = TfidfVectorizer(user_id)
-    matrix = vectorizer.fit_transform(documents)
-
-    target_index = user_ids.index(user_id)
-    target_vector = matrix[target_index]
-
-    similarity_scores = cosine_similarity(target_vector, matrix).flatten()
-    
-    #calculate similarity
-    recommendations = []
-    for idx, avg_similarity in enumerate(similarity_scores):
-        if user_ids[idx] == user_id:
+        if uid == user_id:
             continue
-        if avg_similarity >= 0.6:  #arbitrary threshold
-            recommendations.append(
-                Recommended(
-                    user_id=user_ids[idx], 
-                    similarity_score=round(float(avg_similarity), 3),
-                    message="Recommended user found!"
-                )
-            )
+        for tag in tags:
+            other_user_tags.append(tag)
+            tag_owners.append(uid)
+    if not other_user_tags:
+        return [Recommended(
+            user_id=None, 
+            similarity_score=None,
+            message="No user tags to compare"
+        )]
+
+    #Vectorize tags
+    vectorizer = TfidfVectorizer()
+    all_tags = targegt_tags + other_user_tags
+    matrix = vectorizer.fit_transform(all_tags)
+
+    #Separate matrices
+    num_target_tags = len(targegt_tags)
+    target_matrix = matrix[:num_target_tags]
+    other_matrix = matrix[num_target_tags:]
+
+    similarity_scores = cosine_similarity(other_matrix, target_matrix)
+    
+    user_scores = defaultdict(list)
+    for i, owner_id in enumerate(tag_owners):
+        similarity_row = similarity_scores[i]
+        best_similarity = np.max(similarity_row)
+        if best_similarity >= 0.6:
+            user_scores[owner_id].append(best_similarity)
+
+    #recommendatiosn
+    recommendations = []
+    for uid, scores in user_scores.items():
+        avg_score = sum(scores) / len(scores)
+        recommendations.append(Recommended(
+            user_id=uid, 
+            similarity_score=round(avg_score, 3),
+            message="Recommended users based on tags"
+        ))
         
     #sort similiarity
     recommendations.sort(key=lambda r: r.similarity_score, reverse=True)
