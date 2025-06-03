@@ -7,3 +7,4 @@ info.log
 .DS_Store
 *.txt
 *.env
+default.env

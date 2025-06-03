@@ -108,8 +108,8 @@ def weekly_leaderboard():
                     challenges.title,
                     COUNT(DISTINCT user_tag_upvotes.id) AS total_upvotes
                 FROM challenges 
-                JOIN challenge_submissions  ON challenges.id = challenge_submissions.challenge_id
-                JOIN user_tags ON challenge_submissions.tag_submission = user_tags.id
+                LEFT JOIN challenge_submissions  ON challenges.id = challenge_submissions.challenge_id
+                LEFT JOIN user_tags ON challenge_submissions.tag_submission = user_tags.id
                 LEFT JOIN user_tag_upvotes ON user_tag_upvotes.tag_id = user_tags.id
                 WHERE challenges.timestamp >= NOW() - INTERVAL '7 days'
                 GROUP BY challenges.id

@@ -75,7 +75,7 @@ def recommend(user_id: int):
     target_vector = matrix[target_index]
 
     similarity_scores = cosine_similarity(target_vector, matrix).flatten()
-    
+
     #calculate similarity
     recommendations = []
     for idx, avg_similarity in enumerate(similarity_scores):
