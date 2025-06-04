@@ -89,6 +89,7 @@ def recommend(user_id: int):
     target_matrix = matrix[:num_target_tags]
     other_matrix = matrix[num_target_tags:]
 
+
     similarity_scores = cosine_similarity(other_matrix, target_matrix)
     
     user_scores = defaultdict(list)
@@ -98,7 +99,7 @@ def recommend(user_id: int):
         if best_similarity >= 0.6:
             user_scores[owner_id].append(best_similarity)
 
-    #recommendatiosn
+
     recommendations = []
     for uid, scores in user_scores.items():
         avg_score = sum(scores) / len(scores)
